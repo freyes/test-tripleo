@@ -1,5 +1,4 @@
-# Deploy an Openstack environment with a containerized overcloud
-# using scenario0012
+# scenario based on featureset054.yml
 
 undercloud_setup: false
 network_isolation: false

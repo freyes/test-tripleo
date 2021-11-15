@@ -11,6 +11,7 @@ ironic_overcloud: true
 containerized_overcloud: true
 undercloud_generate_service_certificate: false
 
+undercloud_custom_env_files: "{{ working_dir }}/undercloud-parameter-defaults.yaml"
 undercloud_cloud_domain: "localdomain"
 undercloud_undercloud_hostname: "undercloud.{{ undercloud_cloud_domain }}"
 
@@ -21,6 +22,7 @@ step_true: false
 composable_scenario: scenario012-multinode-containers.yaml
 validate_template: scenario012-multinode.yaml
 deployed_server: true
+baremetal_provision: true
 
 # options below direct automatic doc generation by tripleo-collect-logs
 artcl_gen_docs: true

@@ -34,7 +34,7 @@ sed -i 's/undercloud_setup: true/undercloud_setup: false/' config/general_config
 echo 'undercloud_cloud_domain: "localdomain"
 undercloud_undercloud_hostname: "undercloud.{{ undercloud_cloud_domain }}"' >> config/general_config/featureset054.yml
 
-bash quickstart.sh -R $RELEASE --clean --teardown all --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -p quickstart.yml $VIRTHOST && \
+bash quickstart.sh -R $RELEASE --clean --teardown all --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -p quickstart.yml $VIRTHOST
 bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none -p quickstart-extras-undercloud.yml $VIRTHOST
 bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none -p quickstart-extras-overcloud-prep.yml $VIRTHOST
 bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none -p quickstart-extras-overcloud.yml $VIRTHOST

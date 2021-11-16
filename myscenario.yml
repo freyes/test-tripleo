@@ -23,8 +23,8 @@ ssl_overcloud: false
 
 step_true: false
 
-composable_scenario: scenario012-multinode-containers.yaml
-validate_template: scenario012-multinode.yaml
+composable_scenario: scenario012-standalone.yaml
+# validate_template: scenario012-multinode.yaml
 deployed_server: true
 baremetal_provision: true
 
@@ -98,7 +98,7 @@ tempest_extra_config: {'auth.create_isolated_networks': 'False', 'validation.con
 
 deploy_steps_ansible_workflow:
   true
-config_download_args: >-
-  -e {{ working_dir }}/config-download.yaml
-  --disable-validations
-  --verbose
+# config_download_args: >-
+#   -e {{ working_dir }}/config-download.yaml
+#   --disable-validations
+#   --verbose

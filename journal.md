@@ -53,3 +53,13 @@ sed -i 's/undercloud_setup: true/undercloud_setup: false/' config/general_config
 
 Possibly a race a condition based on:
 https://review.opendev.org/c/openstack/tripleo-heat-templates/+/772893/8#message-becb348c9ef8c4ee0f4e01f819f967d27d05db4f
+
+* Connect to mysql
+
+```
+ssh  -F ~/.quickstart/ssh.config.ansible undercloud
+
+MYSQLPASSWD=$(sudo cat /etc/puppet/hieradata/service_configs.json | grep mysql | grep root_password | awk -F": " '{print $2}' | awk -F"\"" '{print $2}')
+echo $MYSQLPASSWD
+sudo podman exec -ti mysql mysql -u root -p$MYSQLPASSWD
+```

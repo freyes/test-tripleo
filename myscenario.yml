@@ -11,6 +11,10 @@ ironic_overcloud: true
 containerized_overcloud: true
 undercloud_generate_service_certificate: false
 
+overcloud_templates_path: /usr/share/openstack-tripleo-heat-templates
+undercloud_templates_path: /usr/share/openstack-tripleo-heat-templates
+
+
 undercloud_custom_env_files: "{{ working_dir }}/undercloud-parameter-defaults.yaml"
 undercloud_cloud_domain: "localdomain"
 undercloud_undercloud_hostname: "undercloud.{{ undercloud_cloud_domain }}"

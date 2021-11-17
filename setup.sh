@@ -2,7 +2,7 @@
 
 # variables
 export CONFIG=$(pwd)/myscenario.yml
-export LIBGUESTFS_BACKEND_SETTINGS=network_bridge=virbr0
+export LIBGUESTFS_BACKEND_SETTINGS=network_bridge=br11
 export VIRTHOST=127.0.0.2
 export RELEASE=centosci/wallaby-current-tripleo
 export NODE_CONFIG=config/nodes/1ctlr_1comp.yml
@@ -32,16 +32,24 @@ bash quickstart.sh -R $RELEASE --clean --teardown all \
      -p quickstart.yml \
      $VIRTHOST
 
+
 bash quickstart.sh -R $RELEASE \
      --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG \
      -I --teardown none \
      -p quickstart-extras-undercloud.yml \
      $VIRTHOST
 
-bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none \
+bash quickstart.sh -R $RELEASE \
+     --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG \
+     -I --teardown none \
      -p quickstart-extras-overcloud-prep.yml $VIRTHOST
 
-bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none \
+scp -F ~/.quickstart/ssh.config.ansible ../heat-connection.patch undercloud:
+ssh -F ~/.quickstart/ssh.config.ansible undercloud "sudo yum install -y patch"
+ssh -F ~/.quickstart/ssh.config.ansible undercloud "cd /usr/lib/python3.6/site-packages/; sudo patch -u -p1 < /home/stack/heat-connection.patch"
+bash quickstart.sh -R $RELEASE \
+     --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG \
+     -I --teardown none \
      -p quickstart-extras-overcloud.yml $VIRTHOST
 
 # # ssh undercloud

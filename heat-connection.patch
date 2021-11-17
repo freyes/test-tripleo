@@ -1,0 +1,17 @@
+diff --git a/tripleoclient/heat_launcher.py b/tripleoclient/heat_launcher.py
+index f1c1845d..454b6736 100644
+--- a/tripleoclient/heat_launcher.py
++++ b/tripleoclient/heat_launcher.py
+@@ -691,10 +691,8 @@ class HeatPodLauncher(HeatContainerLauncher):
+         return transport_url
+ 
+     def _get_db_connection(self):
+-        return ('mysql+pymysql://'
+-                'heat:heat@{}/heat?read_default_file='
+-                '/etc/my.cnf.d/tripleo.cnf&read_default_group=tripleo'.format(
+-                    self._get_ctlplane_vip()))
++        return self._decode(subprocess.check_output(
++            ['sudo', 'hiera', 'heat::database_connection']))
+ 
+     def _get_ctlplane_vip(self):
+         return self._decode(subprocess.check_output(

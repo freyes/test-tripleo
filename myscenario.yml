@@ -23,7 +23,7 @@ ssl_overcloud: false
 
 step_true: false
 
-undercloud_local_interface: eno2
+undercloud_local_interface: eth1
 undercloud_external_network_cidr: 192.168.11.0/24
 
 # Public (Floating) network definition

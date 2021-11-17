@@ -4,7 +4,7 @@
 export CONFIG=$(pwd)/myscenario.yml
 export LIBGUESTFS_BACKEND_SETTINGS=network_bridge=virbr0
 export VIRTHOST=127.0.0.2
-export RELEASE=wallaby
+export RELEASE=centosci/wallaby-current-tripleo
 export NODE_CONFIG=config/nodes/1ctlr_1comp.yml
 
 # allow local overrides.
@@ -27,17 +27,22 @@ cat ~/.ssh/id_rsa.pub | sudo tee /root/.ssh/authorized_keys
 git clone https://github.com/openstack/tripleo-quickstart
 cd tripleo-quickstart
 
-# https://bugs.launchpad.net/tripleo/+bug/1913675
-# https://review.opendev.org/c/openstack/tripleo-quickstart/+/773294
-sed -i 's/undercloud_setup: true/undercloud_setup: false/' config/general_config/featureset054.yml
+bash quickstart.sh -R $RELEASE --clean --teardown all \
+     --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG \
+     -p quickstart.yml \
+     $VIRTHOST
 
-echo 'undercloud_cloud_domain: "localdomain"
-undercloud_undercloud_hostname: "undercloud.{{ undercloud_cloud_domain }}"' >> config/general_config/featureset054.yml
+bash quickstart.sh -R $RELEASE \
+     --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG \
+     -I --teardown none \
+     -p quickstart-extras-undercloud.yml \
+     $VIRTHOST
 
-bash quickstart.sh -R $RELEASE --clean --teardown all --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -p quickstart.yml $VIRTHOST
-bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none -p quickstart-extras-undercloud.yml $VIRTHOST
-bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none -p quickstart-extras-overcloud-prep.yml $VIRTHOST
-bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none -p quickstart-extras-overcloud.yml $VIRTHOST
+bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none \
+     -p quickstart-extras-overcloud-prep.yml $VIRTHOST
+
+bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none \
+     -p quickstart-extras-overcloud.yml $VIRTHOST
 
 # # ssh undercloud
 # ssh -F ~/.quickstart/ssh.config.ansible undercloud

@@ -23,6 +23,16 @@ ssl_overcloud: false
 
 step_true: false
 
+undercloud_local_interface: eno2
+undercloud_external_network_cidr: 192.168.11.0/24
+
+# Public (Floating) network definition
+public_physical_network: "floating"
+floating_ip_cidr: "192.168.11.0/24"
+public_net_pool_start: "192.168.11.200"
+public_net_pool_end: "192.168.11.250"
+public_net_gateway: "192.168.11.1"
+
 composable_scenario: scenario012-standalone.yaml
 # validate_template: scenario012-multinode.yaml
 deployed_server: true

@@ -1,12 +1,7 @@
 # scenario based on featureset054.yml
 
-undercloud_setup: false
-network_isolation: false
 overcloud_ipv6: false
 ironic_overcloud: true
-
-# pacemaker settings are configured in the scenario template
-# do not set `enable_pacemaker` in the featureset
 
 containerized_overcloud: true
 undercloud_generate_service_certificate: false
@@ -15,9 +10,11 @@ overcloud_templates_path: /usr/share/openstack-tripleo-heat-templates
 undercloud_templates_path: /usr/share/openstack-tripleo-heat-templates
 
 
+undercloud_setup: false
 undercloud_custom_env_files: "{{ working_dir }}/undercloud-parameter-defaults.yaml"
 undercloud_cloud_domain: "localdomain"
 undercloud_undercloud_hostname: "undercloud.{{ undercloud_cloud_domain }}"
+undercloud_enable_routed_networks: true
 
 ssl_overcloud: false
 
@@ -33,10 +30,26 @@ public_net_pool_start: "192.168.11.200"
 public_net_pool_end: "192.168.11.250"
 public_net_gateway: "192.168.11.1"
 
-composable_scenario: scenario012-standalone.yaml
+# composable_scenario: scenario012-standalone.yaml
 # validate_template: scenario012-multinode.yaml
 deployed_server: true
 baremetal_provision: true
+
+# Provision composable networks prior to creating the heat stack
+network_provision: true
+network_data_yaml: "{{ overcloud_templates_path }}/network-data-samples/default-network-isolation.yaml"
+network_isolation_args: >-
+  --networks-file {{ overcloud_templates_path }}/network-data-samples/default-network-isolation.yaml
+  -e {{ working_dir }}/overcloud-networks-deployed.yaml
+  -e {{ working_dir }}/overcloud-vips-deployed.yaml
+  -e {{ overcloud_templates_path }}/environments/net-single-nic-with-vlans.yaml
+  -e {{ working_dir }}/network-environment.yaml
+
+# Tell tripleo about our environment.
+enable_pacemaker: false
+network_isolation: true
+network_isolation_type: "single-nic-vlans"
+
 
 # options below direct automatic doc generation by tripleo-collect-logs
 artcl_gen_docs: true
@@ -106,8 +119,11 @@ tempest_plugins:
 
 tempest_extra_config: {'auth.create_isolated_networks': 'False', 'validation.connect_method': 'fixed', 'validation.network_for_ssh': 'provisioning', 'baremetal.use_provision_network': 'True'}
 
-deploy_steps_ansible_workflow:
-  true
+deploy_steps_ansible_workflow: true
+extra_args: >-
+  -e {{ overcloud_templates_path }}/ci/environments/ovb-ha.yaml
+  -e {{ overcloud_templates_path }}/environments/neutron-ml2-ansible.yaml
+  --disable-protected-resource-types
 # config_download_args: >-
 #   -e {{ working_dir }}/config-download.yaml
 #   --disable-validations

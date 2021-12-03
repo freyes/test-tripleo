@@ -44,6 +44,7 @@ bash quickstart.sh -R $RELEASE \
      -I --teardown none \
      -p quickstart-extras-overcloud-prep.yml $VIRTHOST
 
+# patch tripleo heat-launcher.
 scp -F ~/.quickstart/ssh.config.ansible ../heat-connection.patch undercloud:
 ssh -F ~/.quickstart/ssh.config.ansible undercloud "sudo yum install -y patch"
 ssh -F ~/.quickstart/ssh.config.ansible undercloud "cd /usr/lib/python3.6/site-packages/; sudo patch -u -p1 < /home/stack/heat-connection.patch"
@@ -62,4 +63,7 @@ bash quickstart.sh -R $RELEASE \
 
 
 # validate tripleO is functional
-bash quickstart.sh -R $RELEASE --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG -I --teardown none -p quickstart-extras-validate.yml $VIRTHOST
+bash quickstart.sh -R $RELEASE \
+     --no-clone --tags all --nodes $NODE_CONFIG --config $CONFIG \
+     -I --teardown none \
+     -p quickstart-extras-validate.yml $VIRTHOST

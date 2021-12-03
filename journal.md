@@ -63,3 +63,9 @@ MYSQLPASSWD=$(sudo cat /etc/puppet/hieradata/service_configs.json | grep mysql |
 echo $MYSQLPASSWD
 sudo podman exec -ti mysql mysql -u root -p$MYSQLPASSWD
 ```
+
+* ssh to overcloud control plane
+
+```
+ssh -F ~/.quickstart/ssh.config.ansible overcloud-controller-0
+```
